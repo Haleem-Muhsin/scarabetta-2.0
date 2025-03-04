@@ -4,12 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "./ui/textarea";
+import { Dispatch, SetStateAction } from "react";
 
 interface QuestionProps {
   className?: string;
   question: number;
   questionText: string;
   round: number;
+  answer: string;
+  setAnswer: Dispatch<SetStateAction<string>>;
   onSubmit: (answer: string) => void;
 }
 
@@ -18,14 +21,15 @@ export function Question({
   question,
   questionText,
   round,
+  answer,
+  setAnswer,
   onSubmit,
   ...props
 }: QuestionProps) {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    const formData = new FormData(event.target as HTMLFormElement);
-    const answer = formData.get("answer") as string;
     onSubmit(answer);
+    setAnswer(""); // ✅ Clear answer field after submission
   };
 
   return (
@@ -51,7 +55,14 @@ export function Question({
             </div>
             <div className="flex flex-col gap-3">
               <Label htmlFor="answer">Answer</Label>
-              <Input id="answer" name="answer" required />
+              <Input
+                id="answer"
+                name="answer"
+                value={answer} // ✅ Controlled input
+                onChange={(e) => setAnswer(e.target.value)} // ✅ Updates state
+                required
+                autoComplete="off"
+              />
             </div>
             <Button type="submit" className="w-full">
               Submit

@@ -10,6 +10,7 @@ export default function Round1Page() {
   const [questionNumber, setQuestionNumber] = useState(1);
   const [questionText, setQuestionText] = useState("Loading question...");
   const [feedback, setFeedback] = useState("");
+  const [answer, setAnswer] = useState(""); // Manage answer input
 
   // Fetch question when the component mounts or questionNumber changes
   useEffect(() => {
@@ -18,8 +19,9 @@ export default function Round1Page() {
         console.log(`Fetching question: Round ${roundNumber}, Question ${questionNumber}`);
         const questionData = await fetchQuestion(roundNumber, questionNumber);
         if (questionData) {
-          setQuestionText(questionData.q); // Ensure you're using the correct key
+          setQuestionText(questionData.q);
           setFeedback(""); // Clear previous feedback
+          setAnswer(""); // Clear answer field when a new question loads
         } else {
           setQuestionText("No question available");
         }
@@ -38,7 +40,7 @@ export default function Round1Page() {
       setFeedback("✅ Correct! Moving to next question...");
       setTimeout(() => {
         setQuestionNumber(prev => prev + 1); // Move to next question
-      }, 1000); // Delay for user feedback
+      }, 1000);
     } else {
       setFeedback("❌ Incorrect. Try again!");
     }
@@ -59,6 +61,8 @@ export default function Round1Page() {
           round={roundNumber}
           question={questionNumber}
           questionText={questionText}
+          answer={answer} // Controlled input
+          setAnswer={setAnswer} // Allow updates
           onSubmit={handleAnswerSubmit}
         />
         {feedback && <p className="text-center font-bold">{feedback}</p>}
