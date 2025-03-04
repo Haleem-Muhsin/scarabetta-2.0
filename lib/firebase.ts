@@ -1,12 +1,6 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyDQ9DBUh_on11ZB5Rgo7ITcPxlhckqWY2c",
   authDomain: "scarabetta-2.firebaseapp.com",
@@ -17,17 +11,59 @@ const firebaseConfig = {
   measurementId: "G-5QPW7LMEKT"
 };
 
-// Initialize Firebase
+// Ensure Firebase initializes only once
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 const db = getFirestore(app);
 
-// Function to fetch questions from Firestore
-export const fetchQuestions = async () => {
-  const questionsCollection = collection(db, "questions");
-  const questionSnapshot = await getDocs(questionsCollection);
-  const questionsList = questionSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  return questionsList;
+// Only initialize analytics in the browser
+let analytics;
+if (typeof window !== "undefined") {
+  import("firebase/analytics").then(({ getAnalytics }) => {
+    analytics = getAnalytics(app);
+  });
+}
+
+/**
+ * Fetches a question from Firestore based on round and question number.
+ * @param {number} roundNumber - The round number (collection ID)
+ * @param {number} questionNumber - The question number (document ID)
+ * @returns {Promise<{question: string, answer: string} | null>} Question data or null if not found
+ */
+export const fetchQuestion = async (roundNumber: number, questionNumber: number) => {
+  try {
+    const questionRef = doc(db, `${roundNumber}/${questionNumber}`);
+    const questionSnap = await getDoc(questionRef);
+
+    if (questionSnap.exists()) {
+      return questionSnap.data();
+    } else {
+      console.error("Question not found!");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching question:", error);
+    return null;
+  }
+};
+
+/**
+ * Compares the user's answer with the correct answer stored in Firestore.
+ * @param {number} roundNumber - The round number
+ * @param {number} questionNumber - The question number
+ * @param {string} userAnswer - The answer provided by the user
+ * @returns {Promise<{correct: boolean, message: string}>} Result indicating correctness
+ */
+export const checkAnswer = async (roundNumber: number, questionNumber: number, userAnswer: string) => {
+  const questionData = await fetchQuestion(roundNumber, questionNumber);
+  
+  if (!questionData) return { correct: false, message: "Question not found!" };
+
+  const isCorrect = questionData.Answer.trim().toLowerCase() === userAnswer.trim().toLowerCase();
+
+  return {
+    correct: isCorrect,
+    message: isCorrect ? "Correct answer!" : "Wrong answer, try again.",
+  };
 };
 
 export { db };
