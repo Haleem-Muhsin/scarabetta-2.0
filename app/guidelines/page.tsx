@@ -1,7 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Spotlight } from "@/components/ui/spotlight-new";
-import { ArrowLeft, Link } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function GuidelinesPage() {
