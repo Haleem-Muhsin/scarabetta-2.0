@@ -7,15 +7,17 @@ import { Textarea } from "./ui/textarea";
 
 interface QuestionProps {
   className?: string;
-  round: number;
+  question: number;
   questionText: string;
+  round: number;
   onSubmit: (answer: string) => void;
 }
 
 export function Question({
   className,
-  round,
+  question,
   questionText,
+  round,
   onSubmit,
   ...props
 }: QuestionProps) {
@@ -44,7 +46,7 @@ export function Question({
           </div>
           <div className="flex flex-col gap-6">
             <div className="grid gap-3">
-              <Label htmlFor="question">Question {round}</Label>
+              <Label htmlFor="question">Question {question}</Label>
               <Textarea id="question" value={questionText} readOnly />
             </div>
             <div className="flex flex-col gap-3">

@@ -58,7 +58,7 @@ export const checkAnswer = async (roundNumber: number, questionNumber: number, u
   
   if (!questionData) return { correct: false, message: "Question not found!" };
 
-  const isCorrect = questionData.Answer.trim().toLowerCase() === userAnswer.trim().toLowerCase();
+  const isCorrect = questionData.a.trim().toLowerCase() === userAnswer.trim().toLowerCase();
 
   return {
     correct: isCorrect,
