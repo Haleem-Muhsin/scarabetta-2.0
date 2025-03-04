@@ -44,7 +44,7 @@ export default function GuidelinesPage() {
                                 <strong>Disqualification:</strong> Rule violations result in disqualification.
                             </li>
                             <li className="leading-8 text-justify mb-4">
-                                <strong>Organizers' Decision:</strong> Final and binding on all matters.
+                                <strong>Organizers&apos; Decision:</strong> Final and binding on all matters.
                             </li>
                             <li className="leading-8 text-justify mb-4">
                                 <strong>Code of Conduct:</strong> Maintain respect and sportsmanship.
