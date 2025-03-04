@@ -11,7 +11,13 @@ export default function Round1Page() {
             </div>
             Scarabetta 2.0
           </a>
-          <Question/>
+          <Question
+            textareaProps={{
+              id: "question",
+              placeholder: "Type your question here...",
+              required: true,
+            }}
+          />
         </div>
       </div>
     )
