@@ -8,28 +8,31 @@ import { Scoreboard } from "@/components/ui/scoreboard";
 
 export default function Round1Page() {
   const [teamNumber, setTeamNumber] = useState<string | null>(null);
-  const roundNumber = 1;
+  const [roundNumber, setRoundNumber] = useState(1);
   const [questionNumber, setQuestionNumber] = useState(1);
   const [questionText, setQuestionText] = useState("Loading question...");
   const [feedback, setFeedback] = useState("");
   const [answer, setAnswer] = useState("");
   const [score, setScore] = useState(0);
 
+  // On page load, reset everything
   useEffect(() => {
-    const storedTeamNumber = localStorage.getItem("teamNumber");
-    setTeamNumber(storedTeamNumber);
+    setTeamNumber(localStorage.getItem("teamNumber"));
+    setScore(0); // Reset score on refresh
+    setRoundNumber(1);
+    setQuestionNumber(1);
+  }, []);
 
-    const storedScore = localStorage.getItem("score");
-    if (storedScore) setScore(parseInt(storedScore, 10));
-
+  // Fetch the question when the round or question changes
+  useEffect(() => {
     const loadQuestion = async () => {
       try {
         console.log(`Fetching question: Round ${roundNumber}, Question ${questionNumber}`);
         const questionData = await fetchQuestion(roundNumber, questionNumber);
         if (questionData) {
           setQuestionText(questionData.q);
-          setFeedback("");
-          setAnswer("");
+          setFeedback(""); // Clear previous feedback
+          setAnswer(""); // Reset answer input
         } else {
           setQuestionText("No question available");
         }
@@ -39,27 +42,33 @@ export default function Round1Page() {
     };
 
     loadQuestion();
-  }, [questionNumber]);
+  }, [roundNumber, questionNumber]); // ✅ Depend on both roundNumber and questionNumber
 
+  // Handle answer submission
   const handleAnswerSubmit = async (userAnswer: string) => {
     if (!teamNumber) return;
 
     const result = await checkAnswer(roundNumber, questionNumber, userAnswer);
-    let newFeedback = "Moving to next question...";
+    let newFeedback = result.correct ? "✅ Correct! Moving to next question..." : "❌ Incorrect. Moving to next...";
 
     if (result.correct) {
-      newFeedback = "✅ Correct! Moving to next question...";
-      setScore((prev) => {
-        const newScore = prev + 10;
-        localStorage.setItem("score", newScore.toString()); // Save score to localStorage
-        return newScore;
-      });
+      setScore((prev) => prev + 10); // Increase score if correct
     }
 
     setFeedback(newFeedback);
 
     setTimeout(() => {
-      setQuestionNumber((prev) => prev + 1);
+      setFeedback(""); // ✅ Clear feedback after moving to the next question
+
+      // Move to the next question, or next round if last question of the round
+      if (questionNumber === 5) {
+        if (roundNumber < 5) {
+          setRoundNumber((prev) => prev + 1); // Move to next round
+          setQuestionNumber(1); // Reset question number
+        }
+      } else {
+        setQuestionNumber((prev) => prev + 1);
+      }
     }, 1000);
   };
 
