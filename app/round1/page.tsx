@@ -49,25 +49,30 @@ export default function Round1Page() {
   // Handle answer submission
   const handleAnswerSubmit = async (userAnswer: string) => {
     if (!teamNumber) return;
-
+  
     const result = await checkAnswer(roundNumber, questionNumber, userAnswer);
     let newFeedback = result.correct ? "Moving to next question..." : "Moving to next question...";
-
+  
     if (result.correct) {
-      setScore((prev) => prev + 10); // Increase score if correct
+      setScore((prev) => {
+        const newScore = prev + 10;
+        localStorage.setItem("score", newScore.toString()); // ✅ Save score to localStorage
+        return newScore;
+      });
     }
-
+  
     setFeedback(newFeedback);
-
+  
     setTimeout(() => {
       setFeedback(""); // ✅ Clear feedback after moving to the next question
-
+  
       // ✅ If it's the last question of Round 5, redirect to final score page
       if (roundNumber === 5 && questionNumber === 5) {
-        router.push("/final-score"); // ✅ Redirect after last question
+        localStorage.setItem("score", score.toString()); // ✅ Ensure score is saved before navigating
+        router.push("/final-score");
         return;
       }
-
+  
       // Move to the next question, or next round if last question of the round
       if (questionNumber === 5) {
         if (roundNumber < 5) {
@@ -79,6 +84,7 @@ export default function Round1Page() {
       }
     }, 1000);
   };
+  
 
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
