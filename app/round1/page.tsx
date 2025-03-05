@@ -1,4 +1,4 @@
-"use client"; // Ensure this runs on the client
+"use client";
 
 import { useState, useEffect } from "react";
 import { fetchQuestion, checkAnswer } from "@/lib/firebase";
@@ -8,24 +8,28 @@ import { Scoreboard } from "@/components/ui/scoreboard";
 
 export default function Round1Page() {
   const [teamNumber, setTeamNumber] = useState<string | null>(null);
-  const roundNumber = 1; // Change dynamically if needed
+  const roundNumber = 1;
   const [questionNumber, setQuestionNumber] = useState(1);
   const [questionText, setQuestionText] = useState("Loading question...");
   const [feedback, setFeedback] = useState("");
-  const [answer, setAnswer] = useState(""); // Manage answer input
+  const [answer, setAnswer] = useState("");
   const [score, setScore] = useState(0);
-  // Fetch question when the component mounts or questionNumber changes
+
   useEffect(() => {
     const storedTeamNumber = localStorage.getItem("teamNumber");
     setTeamNumber(storedTeamNumber);
+
+    const storedScore = localStorage.getItem("score");
+    if (storedScore) setScore(parseInt(storedScore, 10));
+
     const loadQuestion = async () => {
       try {
         console.log(`Fetching question: Round ${roundNumber}, Question ${questionNumber}`);
         const questionData = await fetchQuestion(roundNumber, questionNumber);
         if (questionData) {
           setQuestionText(questionData.q);
-          setFeedback(""); // Clear previous feedback
-          setAnswer(""); // Clear answer field when a new question loads
+          setFeedback("");
+          setAnswer("");
         } else {
           setQuestionText("No question available");
         }
@@ -35,23 +39,27 @@ export default function Round1Page() {
     };
 
     loadQuestion();
-  }, [questionNumber]); // Re-run when questionNumber updates
+  }, [questionNumber]);
 
   const handleAnswerSubmit = async (userAnswer: string) => {
-    if (!teamNumber) return; // Ensure teamNumber exists
-  
+    if (!teamNumber) return;
+
     const result = await checkAnswer(roundNumber, questionNumber, userAnswer);
-    let newFeedback = "❌ Incorrect! Moving to next question...";
-  
+    let newFeedback = "Moving to next question...";
+
     if (result.correct) {
-      newFeedback = "✅ Correct! +10 Points";
-      setScore((prev) => prev + 10); // Update local score
+      newFeedback = "✅ Correct! Moving to next question...";
+      setScore((prev) => {
+        const newScore = prev + 10;
+        localStorage.setItem("score", newScore.toString()); // Save score to localStorage
+        return newScore;
+      });
     }
-  
+
     setFeedback(newFeedback);
-  
+
     setTimeout(() => {
-      setQuestionNumber((prev) => prev + 1); // Move to next question regardless
+      setQuestionNumber((prev) => prev + 1);
     }, 1000);
   };
 
@@ -66,13 +74,12 @@ export default function Round1Page() {
           Scarabetta 2.0
         </a>
 
-        {/* Display Question Number */}
         <Question
           round={roundNumber}
           question={questionNumber}
           questionText={questionText}
-          answer={answer} // Controlled input
-          setAnswer={setAnswer} // Allow updates
+          answer={answer}
+          setAnswer={setAnswer}
           onSubmit={handleAnswerSubmit}
         />
         {feedback && <p className="text-center font-bold">{feedback}</p>}

@@ -35,7 +35,7 @@ export function Scoreboard({ teamNumber, localScore }: ScoreboardProps) {
   }
 
   return (
-    <div className="fixed top-4 right-4 bg-gray-800 text-white p-4 rounded-lg shadow-lg">
+    <div className="items-center justify-center">
       <Card>
         <CardHeader>
           <CardTitle>Team {teamNumber} - Score</CardTitle>
