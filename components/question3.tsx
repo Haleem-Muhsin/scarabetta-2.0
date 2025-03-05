@@ -1,6 +1,5 @@
 import { GalleryVerticalEnd } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
-import { useRouter } from "next/navigation"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -12,7 +11,6 @@ export function Question3({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
-  const router = useRouter()
   const [question, setQuestion] = useState<string>("")
   const [options, setOptions] = useState<string[]>([
     "Cache", 

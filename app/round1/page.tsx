@@ -1,14 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { fetchQuestion, checkAnswer } from "@/lib/firebase";
 import { Question } from "@/components/question";
 import { Question3 } from "@/components/question3"; // Import Question3 component
 import { GalleryVerticalEnd } from "lucide-react";
 
 export default function Round1Page() {
-  const router = useRouter();
   const [teamNumber, setTeamNumber] = useState<string | null>(null);
   const [roundNumber, setRoundNumber] = useState(1);
   const [questionNumber, setQuestionNumber] = useState(1);
