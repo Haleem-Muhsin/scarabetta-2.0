@@ -1,12 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation"; // ✅ Import useRouter
 import { fetchQuestion, checkAnswer } from "@/lib/firebase";
 import { Question } from "@/components/question";
 import { GalleryVerticalEnd } from "lucide-react";
 import { Scoreboard } from "@/components/ui/scoreboard";
 
 export default function Round1Page() {
+  const router = useRouter(); // ✅ Initialize router
   const [teamNumber, setTeamNumber] = useState<string | null>(null);
   const [roundNumber, setRoundNumber] = useState(1);
   const [questionNumber, setQuestionNumber] = useState(1);
@@ -49,7 +51,7 @@ export default function Round1Page() {
     if (!teamNumber) return;
 
     const result = await checkAnswer(roundNumber, questionNumber, userAnswer);
-    let newFeedback = result.correct ? "✅ Correct! Moving to next question..." : "❌ Incorrect. Moving to next...";
+    let newFeedback = result.correct ? "Moving to next question..." : "Moving to next question...";
 
     if (result.correct) {
       setScore((prev) => prev + 10); // Increase score if correct
@@ -59,6 +61,12 @@ export default function Round1Page() {
 
     setTimeout(() => {
       setFeedback(""); // ✅ Clear feedback after moving to the next question
+
+      // ✅ If it's the last question of Round 5, redirect to final score page
+      if (roundNumber === 5 && questionNumber === 5) {
+        router.push("/final-score"); // ✅ Redirect after last question
+        return;
+      }
 
       // Move to the next question, or next round if last question of the round
       if (questionNumber === 5) {
@@ -74,7 +82,6 @@ export default function Round1Page() {
 
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
-      <Scoreboard teamNumber={teamNumber} localScore={score} />
       <div className="flex w-full max-w-sm flex-col gap-6">
         <a href="#" className="flex items-center gap-2 self-center font-medium text-2xl">
           <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
