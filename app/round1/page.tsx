@@ -5,8 +5,6 @@ import { useRouter } from "next/navigation"; // ✅ Import useRouter
 import { fetchQuestion, checkAnswer } from "@/lib/firebase";
 import { Question } from "@/components/question";
 import { GalleryVerticalEnd } from "lucide-react";
-import { Scoreboard } from "@/components/ui/scoreboard";
-import Threads from "@/components/ui/threads";
 
 export default function Round1Page() {
   const router = useRouter(); // ✅ Initialize router
@@ -52,7 +50,7 @@ export default function Round1Page() {
     if (!teamNumber) return;
   
     const result = await checkAnswer(roundNumber, questionNumber, userAnswer);
-    let newFeedback = result.correct ? "Moving to next question..." : "Moving to next question...";
+    const newFeedback = result.correct ? "Moving to next question..." : "Moving to next question...";
   
     if (result.correct) {
       setScore((prev) => {
