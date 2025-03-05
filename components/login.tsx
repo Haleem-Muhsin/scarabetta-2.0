@@ -1,6 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation"; // Import useRouter
+import { useRouter } from "next/navigation";
+import { useState } from "react"; // Import useState
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,10 +15,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
-  const router = useRouter(); // Initialize router
+  const router = useRouter();
+  const [teamName, setTeamName] = useState(""); // Store input value
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault(); // Prevent default form submission
+
+    if (teamName.trim() === "") return; // Prevent empty values
+
+    localStorage.setItem("teamNumber", teamName); // Save teamNumber in localStorage
     router.push("/start"); // Navigate to /start
   };
 
@@ -39,7 +45,14 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
               <div className="grid gap-6">
                 <div className="grid gap-3">
                   <Label>Team name</Label>
-                  <Input id="teamName" type="text" placeholder="Team number" required />
+                  <Input
+                    id="teamName"
+                    type="text"
+                    placeholder="Enter team number"
+                    value={teamName}
+                    onChange={(e) => setTeamName(e.target.value)} // Capture input
+                    required
+                  />
                 </div>
                 <Button type="submit" className="w-full">
                   Register
@@ -50,7 +63,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
         </CardContent>
       </Card>
       <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-      Comply with all regulations and instructions for the quiz.
+        Comply with all regulations and instructions for the quiz.
       </div>
     </div>
   );

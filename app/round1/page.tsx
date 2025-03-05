@@ -4,8 +4,10 @@ import { useState, useEffect } from "react";
 import { fetchQuestion, checkAnswer } from "@/lib/firebase";
 import { Question } from "@/components/question";
 import { GalleryVerticalEnd } from "lucide-react";
+import { Scoreboard } from "@/components/ui/scoreboard";
 
 export default function Round1Page() {
+  const [teamNumber, setTeamNumber] = useState<string | null>(null);
   const roundNumber = 1; // Change dynamically if needed
   const [questionNumber, setQuestionNumber] = useState(1);
   const [questionText, setQuestionText] = useState("Loading question...");
@@ -14,6 +16,8 @@ export default function Round1Page() {
 
   // Fetch question when the component mounts or questionNumber changes
   useEffect(() => {
+    const storedTeamNumber = localStorage.getItem("teamNumber");
+    setTeamNumber(storedTeamNumber);
     const loadQuestion = async () => {
       try {
         console.log(`Fetching question: Round ${roundNumber}, Question ${questionNumber}`);
@@ -48,6 +52,7 @@ export default function Round1Page() {
 
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+      <Scoreboard teamNumber={teamNumber} />
       <div className="flex w-full max-w-sm flex-col gap-6">
         <a href="#" className="flex items-center gap-2 self-center font-medium text-2xl">
           <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
