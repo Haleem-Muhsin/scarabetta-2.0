@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { fetchQuestion, checkAnswer } from "@/lib/firebase";
 import { Question } from "@/components/question";
-import {Question3} from "@/components/question3"; // Import Question3 component
+import { Question3 } from "@/components/question3"; // Import Question3 component
 import { GalleryVerticalEnd } from "lucide-react";
 
 export default function Round1Page() {
@@ -18,16 +18,42 @@ export default function Round1Page() {
   const [score, setScore] = useState(0);
 
   useEffect(() => {
+    // Get team number from localStorage
     setTeamNumber(localStorage.getItem("teamNumber"));
-    setScore(0);
+
+    // Get score from localStorage or default to 0
+    const storedScore = localStorage.getItem("score");
+    setScore(storedScore ? parseInt(storedScore) : 0);
+
+    // Always set roundNumber to 1 for this page
     setRoundNumber(1);
-    setQuestionNumber(1);
+
+    // Get questionNumber from localStorage or default to 1
+    const storedQuestionNumber = localStorage.getItem("questionNumber");
+    let startQuestionNumber = storedQuestionNumber ? parseInt(storedQuestionNumber) : 1;
+
+    // If stuck on Question 3, move to 4
+    if (startQuestionNumber === 3) {
+      startQuestionNumber = 4;
+      localStorage.setItem("questionNumber", "4");
+    }
+
+    setQuestionNumber(startQuestionNumber);
   }, []);
+
+  // Save questionNumber to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem("questionNumber", questionNumber.toString());
+  }, [questionNumber]);
 
   useEffect(() => {
     const loadQuestion = async () => {
       try {
         console.log(`Fetching question: Round ${roundNumber}, Question ${questionNumber}`);
+
+        // Skip loading question if coming from Question3
+        if (roundNumber === 1 && questionNumber === 3) return;
+
         const questionData = await fetchQuestion(roundNumber, questionNumber);
         if (questionData) {
           setQuestionText(questionData.q);
@@ -47,35 +73,38 @@ export default function Round1Page() {
     if (!teamNumber) return;
 
     const result = await checkAnswer(roundNumber, questionNumber, userAnswer);
-    const newFeedback = "Moving to next question...";
+    setFeedback("Processing...");
 
+    // Compute new score if correct
+    let newScore = score;
     if (result.correct) {
-      setScore((prev) => {
-        const newScore = prev + 10;
-        localStorage.setItem("score", newScore.toString());
-        return newScore;
-      });
+      newScore += 10;
+      localStorage.setItem("score", newScore.toString());
+      setScore(newScore);
     }
-
-    setFeedback(newFeedback);
 
     setTimeout(() => {
       setFeedback("");
 
-      if (roundNumber === 5 && questionNumber === 5) {
-        localStorage.setItem("score", score.toString());
-        router.push("/final-score");
-        return;
-      }
+      let newQuestionNumber = questionNumber + 1;
+      let newRoundNumber = roundNumber;
 
       if (questionNumber === 5) {
         if (roundNumber < 5) {
-          setRoundNumber((prev) => prev + 1);
-          setQuestionNumber(1);
+          newRoundNumber += 1;
+          newQuestionNumber = 1;
         }
-      } else {
-        setQuestionNumber((prev) => prev + 1);
       }
+
+      console.log(`Moving to Round ${newRoundNumber}, Question ${newQuestionNumber}`);
+
+      // Update localStorage BEFORE updating state
+      localStorage.setItem("questionNumber", newQuestionNumber.toString());
+      localStorage.setItem("roundNumber", newRoundNumber.toString());
+
+      // Update state to trigger re-render
+      setQuestionNumber(newQuestionNumber);
+      setRoundNumber(newRoundNumber);
     }, 1000);
   };
 
@@ -91,8 +120,7 @@ export default function Round1Page() {
 
         {/* Use Question3 only for Round 1, Question 3 */}
         {roundNumber === 1 && questionNumber === 3 ? (
-          <Question3
-          />
+          <Question3 />
         ) : (
           <Question
             round={roundNumber}
