@@ -13,7 +13,7 @@ export default function Round1Page() {
   const [questionText, setQuestionText] = useState("Loading question...");
   const [feedback, setFeedback] = useState("");
   const [answer, setAnswer] = useState(""); // Manage answer input
-
+  const [score, setScore] = useState(0);
   // Fetch question when the component mounts or questionNumber changes
   useEffect(() => {
     const storedTeamNumber = localStorage.getItem("teamNumber");
@@ -38,21 +38,26 @@ export default function Round1Page() {
   }, [questionNumber]); // Re-run when questionNumber updates
 
   const handleAnswerSubmit = async (userAnswer: string) => {
+    if (!teamNumber) return; // Ensure teamNumber exists
+  
     const result = await checkAnswer(roundNumber, questionNumber, userAnswer);
-
+    let newFeedback = "❌ Incorrect! Moving to next question...";
+  
     if (result.correct) {
-      setFeedback("✅ Correct! Moving to next question...");
-      setTimeout(() => {
-        setQuestionNumber(prev => prev + 1); // Move to next question
-      }, 1000);
-    } else {
-      setFeedback("❌ Incorrect. Try again!");
+      newFeedback = "✅ Correct! +10 Points";
+      setScore((prev) => prev + 10); // Update local score
     }
+  
+    setFeedback(newFeedback);
+  
+    setTimeout(() => {
+      setQuestionNumber((prev) => prev + 1); // Move to next question regardless
+    }, 1000);
   };
 
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
-      <Scoreboard teamNumber={teamNumber} />
+      <Scoreboard teamNumber={teamNumber} localScore={score} />
       <div className="flex w-full max-w-sm flex-col gap-6">
         <a href="#" className="flex items-center gap-2 self-center font-medium text-2xl">
           <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">

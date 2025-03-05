@@ -7,10 +7,11 @@ import { Card, CardHeader, CardTitle, CardContent } from "./card";
 
 interface ScoreboardProps {
   teamNumber: string | null;
+  localScore: number;
 }
 
-export function Scoreboard({ teamNumber }: ScoreboardProps) {
-  const [totalScore, setTotalScore] = useState(0);
+export function Scoreboard({ teamNumber, localScore }: ScoreboardProps) {
+  const [firebaseScore, setFirebaseScore] = useState(0);
 
   useEffect(() => {
     if (!teamNumber) return;
@@ -20,9 +21,9 @@ export function Scoreboard({ teamNumber }: ScoreboardProps) {
       if (docSnap.exists()) {
         const scores = docSnap.data();
         const sum = Object.values(scores).reduce((acc, val) => acc + (val as number), 0);
-        setTotalScore(sum);
+        setFirebaseScore(sum);
       } else {
-        setTotalScore(0);
+        setFirebaseScore(0);
       }
     });
 
@@ -40,7 +41,7 @@ export function Scoreboard({ teamNumber }: ScoreboardProps) {
           <CardTitle>Team {teamNumber} - Score</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-xl font-semibold">{totalScore}</p>
+          <p className="text-xl font-semibold">{firebaseScore + localScore}</p>
         </CardContent>
       </Card>
     </div>
