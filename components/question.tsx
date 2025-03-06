@@ -46,11 +46,25 @@ export function Question({
               </div>
               <span className="sr-only">Scarabetta 2.0</span>
             </a>
-            <h1 className="text-xl font-bold">Welcome to Round {round}</h1>
+            <h1 className="text-xl font-bold">
+              Welcome to Round {round === 3 && question === 3 ? (
+                <span className="font-mono italic text-gray-600 px-1 rotate-3 inline-block">{round}</span>
+              ) : (
+                round
+              )}
+            </h1>
+
+
+
           </div>
           <div className="flex flex-col gap-6">
             <div className="grid gap-3">
-              <Label htmlFor="question">Question {question}</Label>
+              <Label htmlFor="question">Question {round === 3 && question === 3 ? (
+                <span className="font-mono italic text-gray-600 px-1 rotate-3 inline-block">{round}</span>
+                ) : (
+                  question
+                )}
+              </Label>
               <Textarea id="question" value={questionText} readOnly />
             </div>
             <div className="flex flex-col gap-3">
