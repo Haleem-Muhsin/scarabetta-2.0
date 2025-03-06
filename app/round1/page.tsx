@@ -71,7 +71,7 @@ export default function Round1Page() {
     if (!teamNumber) return;
 
     const result = await checkAnswer(roundNumber, questionNumber, userAnswer);
-    setFeedback("Processing...");
+    setFeedback("Correct answer, Moving on...");
 
     // Compute new score if correct
     let newScore = score;
@@ -79,6 +79,10 @@ export default function Round1Page() {
       newScore += 10;
       localStorage.setItem("score", newScore.toString());
       setScore(newScore);
+    }
+    else{
+      setFeedback("Incorrect answer. Try again");
+      return;
     }
 
     setTimeout(() => {

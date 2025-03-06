@@ -141,7 +141,7 @@ export function Question3({
                   height: initialHeight,
                   minHeight: "84px", // Minimum height for 3 options
                   maxHeight: "400px",
-                  overflow: "auto",
+                  overflow: "hidden",
                   msOverflowStyle: "none", // Hide scrollbar in IE and Edge
                   scrollbarWidth: "none", // Hide scrollbar in Firefox
                 }}
