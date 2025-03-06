@@ -176,7 +176,7 @@ export default function Round1Page() {
       <div className="bg-white p-6 rounded-lg max-w-md text-center w-full md:w-auto">
         <h2 className="text-xl font-bold text-red-600 mb-4">You naughty!</h2>
         <p className="mb-4">Tab switching or leaving the window is not allowed during the quiz.</p>
-        <p className="mb-6">You&apos;ll be deducted 10 points.</p>
+        <p className="mb-6">You&apos;ll be deducted 100 points.</p>
         <button 
           onClick={dismissWarning}
           className="bg-primary text-white px-4 py-2 rounded-md"
@@ -191,9 +191,17 @@ export default function Round1Page() {
       
       <div className="flex w-full max-w-sm flex-col gap-6">
         <a href="#" className="flex items-center gap-2 self-center font-medium text-2xl">
-          <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
-            <GalleryVerticalEnd className="size-4" />
-          </div>
+        <div className="group relative flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
+
+          {roundNumber ===2 && questionNumber === 4 ? (
+          <span className="absolute right-full mr-2 hidden whitespace-nowrap rounded bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:block group-hover:opacity-100">
+            ٦١٣٣٨٢ = 613382
+          </span>):(undefined)
+          }
+          <GalleryVerticalEnd className="size-4" />
+        </div>
+
+
           Scarabetta 2.0
         </a>
 
