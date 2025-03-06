@@ -24,7 +24,7 @@ export function Question3({
   const [feedback, setFeedback] = useState<string>("")
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
   
-  // Reference to calculate the height needed for 3 options
+  // Reference to calculate the height needed for options
   const optionRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -73,11 +73,14 @@ export function Question3({
         const currentScore = parseInt(localStorage.getItem("score") || "0")
         localStorage.setItem("score", (currentScore + 10).toString())
         
-        // Wait a moment before redirecting
+        // Wait a moment before moving to next question
         setTimeout(() => {
-          // This will trigger the parent component to move to the next question
-          // by refreshing the page with updated questionNumber in localStorage
-          window.location.reload()
+          // Update localStorage to move to question 4
+          localStorage.setItem("questionNumber", "4");
+          
+          // Use window.location.href instead of reload to navigate to the same page
+          // This will trigger the parent component to load question 4
+          window.location.reload();
         }, 1500)
       } else {
         setFeedback("Incorrect. Please try again.")
@@ -101,7 +104,7 @@ export function Question3({
   // Calculate the initial height to show exactly 2 options
   // Each option is approximately 28px high (including margin)
   // Plus padding (16px top + 16px bottom = 32px)
-  const initialHeight =28 + 32 + 'px'
+  const initialHeight = `${28 + 32}px`
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -137,7 +140,7 @@ export function Question3({
                 style={{
                   resize: "vertical",
                   height: initialHeight,
-                  minHeight: "76px", // Minimum height for 3 options
+                  minHeight: "76px", // Minimum height for 2 options
                   maxHeight: "400px",
                   overflow: "hidden",
                   msOverflowStyle: "none", // Hide scrollbar in IE and Edge

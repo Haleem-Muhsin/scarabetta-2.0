@@ -20,17 +20,26 @@ export default function Round1Page() {
     // Get team number from localStorage
     setTeamNumber(localStorage.getItem("teamNumber"));
 
-    // Get score from localStorage or default to 0
-    const storedScore = localStorage.getItem("score");
-    setScore(storedScore ? parseInt(storedScore) : 0);
-
     // Always set roundNumber to 1 for this page
     setRoundNumber(1);
     
-    // Always start with question 1 on page refresh
-    setQuestionNumber(1);
-    localStorage.setItem("questionNumber", "1");
-    localStorage.setItem("score", "0")
+    // Check if question number is 4 from localStorage
+    const storedQuestionNumber = localStorage.getItem("questionNumber");
+    
+    if (storedQuestionNumber === "4") {
+      // If question number is 4, keep it and don't clear score
+      setQuestionNumber(4);
+      
+      // Get score from localStorage or default to 0
+      const storedScore = localStorage.getItem("score");
+      setScore(storedScore ? parseInt(storedScore) : 0);
+    } else {
+      // If question number is not 4, reset to question 1 and clear score
+      setQuestionNumber(1);
+      localStorage.setItem("questionNumber", "1");
+      localStorage.setItem("score", "0");
+      setScore(0);
+    }
     
     // Mark initial load as complete
     setIsInitialLoad(false);
