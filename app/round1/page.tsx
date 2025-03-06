@@ -5,6 +5,7 @@ import { fetchQuestion, checkAnswer } from "@/lib/firebase";
 import { Question } from "@/components/question";
 import { Question3 } from "@/components/question3"; // Import Question3 component
 import { GalleryVerticalEnd } from "lucide-react";
+import Image from "next/image";
 
 export default function Round1Page() {
   const [teamNumber, setTeamNumber] = useState<string | null>(null);
@@ -114,7 +115,7 @@ export default function Round1Page() {
       setFeedback("Correct answer, Moving on...");
       
       // Compute new score if correct
-      let newScore = score + 100;
+      const newScore = score + 100;
       localStorage.setItem("score", newScore.toString());
       setScore(newScore);
       
@@ -148,7 +149,7 @@ export default function Round1Page() {
 
   // Dismiss the tab switch warning
   const dismissWarning = () => {
-    let newScore = score - 100;
+    const newScore = score - 100;
     localStorage.setItem("score", newScore.toString());
     setTabSwitchWarning(false);
     
@@ -160,7 +161,7 @@ export default function Round1Page() {
   <div className="fixed inset-0 bg-black bg-opacity-80 flex flex-col md:flex-row items-center md:justify-between z-50 p-4">
     {/* Left side - Image (full width on mobile, half width on desktop) */}
     <div className="w-full md:w-1/2 flex justify-center items-center mb-4 md:mb-0">
-      <img 
+      <Image
         src="/images/foul.png" 
         alt="You naughty!" 
         className="w-full max-w-sm h-auto" 
@@ -172,7 +173,7 @@ export default function Round1Page() {
       <div className="bg-white p-6 rounded-lg max-w-md text-center w-full md:w-auto">
         <h2 className="text-xl font-bold text-red-600 mb-4">You naughty!</h2>
         <p className="mb-4">Tab switching or leaving the window is not allowed during the quiz.</p>
-        <p className="mb-6">You'll be deducted 10 points.</p>
+        <p className="mb-6">You&apos;ll be deducted 10 points.</p>
         <button 
           onClick={dismissWarning}
           className="bg-primary text-white px-4 py-2 rounded-md"
