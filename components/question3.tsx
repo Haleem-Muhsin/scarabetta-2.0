@@ -67,7 +67,7 @@ export function Question3({
       const result = await checkAnswer(1, 3, selectedOption)
       
       if (result.correct) {
-        setFeedback("Correct! Moving to next question...")
+        setFeedback("✅ Correct! Moving to next question...")
         
         // Update score in localStorage
         const currentScore = parseInt(localStorage.getItem("score") || "0")
@@ -83,7 +83,7 @@ export function Question3({
           window.location.reload();
         }, 1500)
       } else {
-        setFeedback("Incorrect. Please try again.")
+        setFeedback("❌ Incorrect")
         return
       }
     } catch (err) {

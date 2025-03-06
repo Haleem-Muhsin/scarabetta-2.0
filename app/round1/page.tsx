@@ -89,12 +89,12 @@ export default function Round1Page() {
     const result = await checkAnswer(roundNumber, questionNumber, userAnswer);
     const isLimitedQuestion = (roundNumber === 3 && questionNumber === 5) || (roundNumber === 4 && questionNumber === 1);
     if (result.correct) {
-      setFeedback("Correct answer, Moving on...");
+      setFeedback("✅ Correct answer, Moving on...");
       const newScore = score + 100;
       localStorage.setItem("score", newScore.toString());
       setScore(newScore);
     } else {
-      setFeedback("Incorrect answer. Try again");
+      setFeedback(" ❌ Incorrect answer");
     }
     setTimeout(() => {
       if (isLimitedQuestion) {
