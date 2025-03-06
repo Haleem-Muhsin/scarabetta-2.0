@@ -126,7 +126,7 @@ export default function Round1Page() {
         let newRoundNumber = roundNumber;
 
         if (questionNumber === 5) {
-          if (roundNumber < 5) {
+          if (roundNumber < 4) {
             newRoundNumber += 1;
             newQuestionNumber = 1;
           }
@@ -176,7 +176,7 @@ export default function Round1Page() {
       <div className="bg-white p-6 rounded-lg max-w-md text-center w-full md:w-auto">
         <h2 className="text-xl font-bold text-red-600 mb-4">You naughty!</h2>
         <p className="mb-4">Tab switching or leaving the window is not allowed during the quiz.</p>
-        <p className="mb-6">You&apos;ll be deducted 100 points.</p>
+        <p className="mb-6">You&apos;ll be deducted 100 Divine Aura.</p>
         <button 
           onClick={dismissWarning}
           className="bg-primary text-white px-4 py-2 rounded-md"
