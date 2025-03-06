@@ -18,7 +18,7 @@ export default function StartPage() {
   return (
     <div
       className="flex h-screen items-end justify-center bg-black text-white py-10"
-      style={{ backgroundImage: 'url("/images/Desktop-2.png")',backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}
+      style={{ backgroundImage: 'url("/images/Desktop-2.webp")',backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}
       onClick={() => router.push("/guidelines")} // Change "/next-page" to your target page
     >
       {showText && (
