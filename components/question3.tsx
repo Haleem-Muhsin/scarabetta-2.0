@@ -71,7 +71,7 @@ export function Question3({
         
         // Update score in localStorage
         const currentScore = parseInt(localStorage.getItem("score") || "0")
-        localStorage.setItem("score", (currentScore + 10).toString())
+        localStorage.setItem("score", (currentScore + 100).toString())
         
         // Wait a moment before moving to next question
         setTimeout(() => {

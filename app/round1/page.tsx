@@ -15,6 +15,7 @@ export default function Round1Page() {
   const [answer, setAnswer] = useState("");
   const [score, setScore] = useState(0);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [tabSwitchWarning, setTabSwitchWarning] = useState(false);
 
   useEffect(() => {
     // Get team number from localStorage
@@ -43,7 +44,36 @@ export default function Round1Page() {
     
     // Mark initial load as complete
     setIsInitialLoad(false);
+
+    // Add event listeners to detect tab switching
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("blur", handleWindowBlur);
+
+    // Clean up event listeners on component unmount
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("blur", handleWindowBlur);
+    };
   }, []);
+
+  // Handle visibility change (tab switching)
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === "hidden") {
+      showTabSwitchWarning();
+    }
+  };
+
+  // Handle window blur (clicking outside the window)
+  const handleWindowBlur = () => {
+    showTabSwitchWarning();
+  };
+
+  // Show warning when tab switching is detected
+  const showTabSwitchWarning = () => {
+    setTabSwitchWarning(true);
+    // You could also implement additional penalties here
+    // For example, deducting points or logging the incident
+  };
 
   // Only save questionNumber to localStorage when it changes AFTER initial load
   useEffect(() => {
@@ -84,7 +114,7 @@ export default function Round1Page() {
       setFeedback("Correct answer, Moving on...");
       
       // Compute new score if correct
-      let newScore = score + 10;
+      let newScore = score + 100;
       localStorage.setItem("score", newScore.toString());
       setScore(newScore);
       
@@ -116,8 +146,45 @@ export default function Round1Page() {
     }
   };
 
+  // Dismiss the tab switch warning
+  const dismissWarning = () => {
+    let newScore = score - 100;
+    localStorage.setItem("score", newScore.toString());
+    setTabSwitchWarning(false);
+    
+  };
+
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+      {tabSwitchWarning && (
+  <div className="fixed inset-0 bg-black bg-opacity-80 flex flex-col md:flex-row items-center md:justify-between z-50 p-4">
+    {/* Left side - Image (full width on mobile, half width on desktop) */}
+    <div className="w-full md:w-1/2 flex justify-center items-center mb-4 md:mb-0">
+      <img 
+        src="/images/foul.png" 
+        alt="You naughty!" 
+        className="w-full max-w-sm h-auto" 
+      />
+    </div>
+    
+    {/* Right side - Content (full width on mobile, half width on desktop) */}
+    <div className="w-full md:w-1/2 flex justify-center items-center md:pr-8">
+      <div className="bg-white p-6 rounded-lg max-w-md text-center w-full md:w-auto">
+        <h2 className="text-xl font-bold text-red-600 mb-4">You naughty!</h2>
+        <p className="mb-4">Tab switching or leaving the window is not allowed during the quiz.</p>
+        <p className="mb-6">You'll be deducted 10 points.</p>
+        <button 
+          onClick={dismissWarning}
+          className="bg-primary text-white px-4 py-2 rounded-md"
+        >
+          I Understand
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+      
       <div className="flex w-full max-w-sm flex-col gap-6">
         <a href="#" className="flex items-center gap-2 self-center font-medium text-2xl">
           <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
