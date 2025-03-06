@@ -74,7 +74,7 @@ export function Question({
                 name="answer"
                 value={answer} // ✅ Controlled input
                 onChange={(e) => setAnswer(e.target.value)} // ✅ Updates state
-                required
+                required={!(round === 2 && question === 5)}
                 autoComplete="off"
               />
             </div>
