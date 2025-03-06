@@ -14,6 +14,7 @@ export default function Round1Page() {
   const [feedback, setFeedback] = useState("");
   const [answer, setAnswer] = useState("");
   const [score, setScore] = useState(0);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   useEffect(() => {
     // Get team number from localStorage
@@ -25,24 +26,22 @@ export default function Round1Page() {
 
     // Always set roundNumber to 1 for this page
     setRoundNumber(1);
-
-    // Get questionNumber from localStorage or default to 1
-    const storedQuestionNumber = localStorage.getItem("questionNumber");
-    let startQuestionNumber = storedQuestionNumber ? parseInt(storedQuestionNumber) : 1;
-
-    // If stuck on Question 3, move to 4
-    if (startQuestionNumber === 3) {
-      startQuestionNumber = 4;
-      localStorage.setItem("questionNumber", "4");
-    }
-
-    setQuestionNumber(startQuestionNumber);
+    
+    // Always start with question 1 on page refresh
+    setQuestionNumber(1);
+    localStorage.setItem("questionNumber", "1");
+    localStorage.setItem("score", "0")
+    
+    // Mark initial load as complete
+    setIsInitialLoad(false);
   }, []);
 
-  // Save questionNumber to localStorage whenever it changes
+  // Only save questionNumber to localStorage when it changes AFTER initial load
   useEffect(() => {
-    localStorage.setItem("questionNumber", questionNumber.toString());
-  }, [questionNumber]);
+    if (!isInitialLoad) {
+      localStorage.setItem("questionNumber", questionNumber.toString());
+    }
+  }, [questionNumber, isInitialLoad]);
 
   useEffect(() => {
     const loadQuestion = async () => {
@@ -71,43 +70,41 @@ export default function Round1Page() {
     if (!teamNumber) return;
 
     const result = await checkAnswer(roundNumber, questionNumber, userAnswer);
-    setFeedback("Correct answer, Moving on...");
-
-    // Compute new score if correct
-    let newScore = score;
+    
     if (result.correct) {
-      newScore += 10;
+      setFeedback("Correct answer, Moving on...");
+      
+      // Compute new score if correct
+      let newScore = score + 10;
       localStorage.setItem("score", newScore.toString());
       setScore(newScore);
-    }
-    else{
-      setFeedback("Incorrect answer. Try again");
-      return;
-    }
+      
+      setTimeout(() => {
+        setFeedback("");
 
-    setTimeout(() => {
-      setFeedback("");
+        let newQuestionNumber = questionNumber + 1;
+        let newRoundNumber = roundNumber;
 
-      let newQuestionNumber = questionNumber + 1;
-      let newRoundNumber = roundNumber;
-
-      if (questionNumber === 5) {
-        if (roundNumber < 5) {
-          newRoundNumber += 1;
-          newQuestionNumber = 1;
+        if (questionNumber === 5) {
+          if (roundNumber < 5) {
+            newRoundNumber += 1;
+            newQuestionNumber = 1;
+          }
         }
-      }
 
-      console.log(`Moving to Round ${newRoundNumber}, Question ${newQuestionNumber}`);
+        console.log(`Moving to Round ${newRoundNumber}, Question ${newQuestionNumber}`);
 
-      // Update localStorage BEFORE updating state
-      localStorage.setItem("questionNumber", newQuestionNumber.toString());
-      localStorage.setItem("roundNumber", newRoundNumber.toString());
+        // Update localStorage BEFORE updating state
+        localStorage.setItem("questionNumber", newQuestionNumber.toString());
+        localStorage.setItem("roundNumber", newRoundNumber.toString());
 
-      // Update state to trigger re-render
-      setQuestionNumber(newQuestionNumber);
-      setRoundNumber(newRoundNumber);
-    }, 1000);
+        // Update state to trigger re-render
+        setQuestionNumber(newQuestionNumber);
+        setRoundNumber(newRoundNumber);
+      }, 1000);
+    } else {
+      setFeedback("Incorrect answer. Try again");
+    }
   };
 
   return (

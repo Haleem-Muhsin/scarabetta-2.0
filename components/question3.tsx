@@ -15,6 +15,7 @@ export function Question3({
   const [options, setOptions] = useState<string[]>([
     "Cache", 
     "RAM", 
+    " ",
     "Register", 
   ]) // Default options or you can fetch from Firebase
   const [selectedOption, setSelectedOption] = useState<string>("")
@@ -76,14 +77,11 @@ export function Question3({
         setTimeout(() => {
           // This will trigger the parent component to move to the next question
           // by refreshing the page with updated questionNumber in localStorage
-          localStorage.setItem("questionNumber", "4")
           window.location.reload()
         }, 1500)
       } else {
         setFeedback("Incorrect. Please try again.")
-        setTimeout(() => {
-          setFeedback("")
-        }, 1500)
+        return
       }
     } catch (err) {
       console.error("Error submitting answer:", err)
@@ -100,7 +98,7 @@ export function Question3({
     setSelectedOption(e.target.value)
   }
 
-  // Calculate the initial height to show exactly 3 options
+  // Calculate the initial height to show exactly 2 options
   // Each option is approximately 28px high (including margin)
   // Plus padding (16px top + 16px bottom = 32px)
   const initialHeight =28 + 32 + 'px'
@@ -139,7 +137,7 @@ export function Question3({
                 style={{
                   resize: "vertical",
                   height: initialHeight,
-                  minHeight: "84px", // Minimum height for 3 options
+                  minHeight: "76px", // Minimum height for 3 options
                   maxHeight: "400px",
                   overflow: "hidden",
                   msOverflowStyle: "none", // Hide scrollbar in IE and Edge
