@@ -48,7 +48,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                   <Input
                     id="teamName"
                     type="text"
-                    placeholder="Enter team number"
+                    placeholder="Enter team name"
                     value={teamName}
                     onChange={(e) => setTeamName(e.target.value)} // Capture input
                     required
