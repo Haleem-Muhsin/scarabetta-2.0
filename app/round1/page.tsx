@@ -161,12 +161,15 @@ export default function Round1Page() {
   <div className="fixed inset-0 bg-black bg-opacity-80 flex flex-col md:flex-row items-center md:justify-between z-50 p-4">
     {/* Left side - Image (full width on mobile, half width on desktop) */}
     <div className="w-full md:w-1/2 flex justify-center items-center mb-4 md:mb-0">
-      <Image
-        src="/images/foul.png" 
-        alt="You naughty!" 
-        className="w-full max-w-sm h-auto" 
-      />
-    </div>
+  <Image
+    src="/images/foul.png" 
+    alt="You naughty!" 
+    width={500}  // Add appropriate width
+    height={300} // Add appropriate height
+    className="w-full max-w-sm h-auto" 
+  />
+</div>
+
     
     {/* Right side - Content (full width on mobile, half width on desktop) */}
     <div className="w-full md:w-1/2 flex justify-center items-center md:pr-8">
