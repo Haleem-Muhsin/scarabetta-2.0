@@ -41,9 +41,13 @@ export function Question({
               href="#"
               className="flex flex-col items-center gap-2 font-medium"
             >
-              <div className="flex size-8 items-center justify-center rounded-md">
-                <GalleryVerticalEnd className="size-6" />
+              <div className="group relative flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
+                <span className="absolute right-full mr-2 hidden whitespace-nowrap rounded bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:block group-hover:opacity-100">
+                ٦١٣٣٨٢-613382
+                </span>
+                <GalleryVerticalEnd className="size-4" />
               </div>
+
               <span className="sr-only">Scarabetta 2.0</span>
             </a>
             <h1 className="text-xl font-bold">

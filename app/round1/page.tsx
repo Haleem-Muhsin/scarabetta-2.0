@@ -112,10 +112,10 @@ export default function Round1Page() {
 
   const router = useRouter(); // Initialize useRouter
 
-const proceedToNextQuestion = () => {
-  if (roundNumber === 4 && questionNumber === 5) {
-    router.push("/final-score"); // ✅ Correct way to navigate
-    return;
+  const proceedToNextQuestion = () => {
+    if (roundNumber === 4 && questionNumber === 5) {
+      router.push("/final-score"); // ✅ Correct way to navigate
+      return;
   }
 
     let newQuestionNumber = questionNumber + 1;
