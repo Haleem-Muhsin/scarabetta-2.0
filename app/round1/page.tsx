@@ -6,7 +6,8 @@ import { Question } from "@/components/question";
 import { Question3 } from "@/components/question3"; // Import Question3 component
 import { GalleryVerticalEnd } from "lucide-react";
 import Image from "next/image";
-import router from "next/router";
+import { useRouter } from "next/navigation";
+
 
 export default function Round1Page() {
   const [teamNumber, setTeamNumber] = useState<string | null>(null);
@@ -109,11 +110,14 @@ export default function Round1Page() {
     }, 1000);
   };
 
-  const proceedToNextQuestion = () => {
-    if (roundNumber === 4 && questionNumber === 5) {
-      router.push("/final-score"); // ✅ Redirect after Round 4, Question 5
-      return;
-    }
+  const router = useRouter(); // Initialize useRouter
+
+const proceedToNextQuestion = () => {
+  if (roundNumber === 4 && questionNumber === 5) {
+    router.push("/final-score"); // ✅ Correct way to navigate
+    return;
+  }
+
     let newQuestionNumber = questionNumber + 1;
     let newRoundNumber = roundNumber;
     if (questionNumber === 5) {

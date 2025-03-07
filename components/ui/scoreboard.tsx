@@ -38,7 +38,7 @@ export function Scoreboard({ teamNumber, localScore }: ScoreboardProps) {
     <div className="items-center justify-center">
       <Card>
         <CardHeader>
-          <CardTitle>Team {teamNumber} - Score</CardTitle>
+          <CardTitle>Team: {teamNumber} - total  Aura</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-xl font-semibold">{firebaseScore + localScore}</p>
